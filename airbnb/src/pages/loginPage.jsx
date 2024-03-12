@@ -8,6 +8,7 @@ export default function LoginPage(){
     const [password, setPassword] = useState('');
     const [redirect, setRedirect] = useState(false);
     const {setUser} = useContext(UserContext);
+
     async function handleLoginSubmit(ev){
         ev.preventDefault();
         try{
@@ -31,7 +32,7 @@ export default function LoginPage(){
                     <input type="email" placeholder="your@email.com" value={email}  onChange={ev => setEmail(ev.target.value)}/>
                     <input type="password" placeholder="password" value={password} onChange={ev => setPassword(ev.target.value)}></input>
                     <button className="primary">Login</button>
-                    <div className="text-center py-2 text-gray-500">Don't have acn account yet?
+                    <div className="text-center py-2 text-gray-500">Don't have an account yet?
                         <Link className="underline text-bn" to={"/register"}>Register</Link>
                     </div>
                 </form>
