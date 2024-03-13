@@ -9,10 +9,12 @@ const jwt = require('jsonwebtoken')
 var cookieParser = require('cookie-parser')
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'thiennghia';
+const imageDownloader = require('image-downloader')
 
 
 app.use(express.json());
 app.use(cookieParser());
+app.use('/uploads', express.static(__dirname + '/uploads'))
 app.use(cors({
     credentials: true,
     origin: 'http://localhost:5173',
@@ -68,5 +70,15 @@ app.get('/profile', (req, res) => {
 app.post('/logout', (req, res) => {
     res.cookie('token', '').json(true);
 
+})
+console.log({ __dirname })
+app.post('/upload-by-link', async(req, res) => {
+    const { link } = req.body;
+    const name = 'photo' + Date.now() + '.jpg'
+    await imageDownloader.image({
+        url: link,
+        dest: __dirname + '/uploads/' + name,
+    })
+    res.json(name)
 })
 app.listen(4000)
