@@ -71,7 +71,7 @@ app.post('/logout', (req, res) => {
     res.cookie('token', '').json(true);
 
 })
-console.log({ __dirname })
+
 app.post('/upload-by-link', async(req, res) => {
     const { link } = req.body;
     const name = 'photo' + Date.now() + '.jpg'
