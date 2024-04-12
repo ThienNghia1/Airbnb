@@ -1,6 +1,6 @@
-const mongoose = require('mongoose ');
+const mongoose = require('mongoose');
 
-const placeSchema = mongoose.model({
+const placeSchema = mongoose.Schema({
     owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     title: String,
     address: String,
@@ -14,4 +14,4 @@ const placeSchema = mongoose.model({
 })
 
 const PlaceModel = mongoose.model('Place', placeSchema);
-model.exports = PlaceModel;
+module.exports = PlaceModel;

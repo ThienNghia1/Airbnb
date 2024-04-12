@@ -4,13 +4,15 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const User = require('./models/User.js');
+const Place = require('./models/Places.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 var cookieParser = require('cookie-parser')
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'thiennghia';
 const imageDownloader = require('image-downloader')
-
+const multer = require('multer');
+const fs = require('fs');
 
 app.use(express.json());
 app.use(cookieParser());
@@ -81,4 +83,53 @@ app.post('/upload-by-link', async(req, res) => {
     })
     res.json(name)
 })
+
+const photoMiddleware = multer({ dest: 'uploads/' });
+app.post('/upload', photoMiddleware.array('photos', 100), (req, res) => {
+    const upLoadFiles = [];
+    for (let i = 0; i < req.files.length; i++) {
+        const { path, originalname } = req.files[i];
+        const parts = originalname.split('.');
+        const ext = parts[parts.length - 1];
+        const newName = path + '.' + ext;
+        fs.renameSync(path, newName);
+        upLoadFiles.push(newName.replace('uploads\\', ''));
+    }
+
+    res.json(upLoadFiles);
+})
+
+app.post('/places', (req, res) => {
+    const { token } = req.cookies;
+    const {
+        title,
+        address,
+        addPhoto,
+        description,
+        perks,
+        extraInfo,
+        checkIn,
+        checkOut,
+        maxGuest
+    } = req.body;
+
+    jwt.verify(token, jwtSecret, {}, async(err, userData) => {
+        if (err) throw err;
+        const placeDoc = await Place.create({
+            owner: userData.id,
+            title,
+            address,
+            addPhoto,
+            description,
+            perks,
+            extraInfo,
+            checkIn,
+            checkOut,
+            maxGuest
+        })
+        res.json(placeDoc);
+    })
+
+})
+
 app.listen(4000)
