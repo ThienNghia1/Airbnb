@@ -7,9 +7,7 @@ export default function ProfilePage(){
 
     const {ready, user, setUser} = useContext(UserContext)
     const [redirect, setRedirect] = useState(null)
-    if(!ready){
-        return 'Loading...'
-    }
+
     async function logout(){
         await axios.post('/logout');
         setRedirect('/');
@@ -17,6 +15,9 @@ export default function ProfilePage(){
     }
     if (!user && ready  && !redirect){
         return <Navigate to={'/login'} />
+    }
+    if (!ready){
+        return <div>Loading...</div>
     }
     if(redirect){
         return <Navigate to={redirect} />
